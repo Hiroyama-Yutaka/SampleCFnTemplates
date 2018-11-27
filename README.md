@@ -1,1 +1,1 @@
-SampleCFnTemplates
+Samples of AWS CloudFormation Template.
