@@ -40,7 +40,7 @@ Parameters:
         Default: 10.192.21.0/24
 
 Conditions:
-  IsWithNatGW: !Equals [!Ref WithNatGW, "True"]
+    IsWithNatGW: !Equals [!Ref WithNatGW, "True"]
 
 Resources:
     VPC:
@@ -118,17 +118,20 @@ Resources:
     NatGateway2EIP:
         Type: AWS::EC2::EIP
         DependsOn: InternetGatewayAttachment
+        Condition: IsWithNatGW
         Properties:
             Domain: vpc
 
     NatGateway1:
         Type: AWS::EC2::NatGateway
+        Condition: IsWithNatGW
         Properties:
             AllocationId: !GetAtt NatGateway1EIP.AllocationId
             SubnetId: !Ref PublicSubnet1
 
     NatGateway2:
         Type: AWS::EC2::NatGateway
+        Condition: IsWithNatGW
         Properties:
             AllocationId: !GetAtt NatGateway2EIP.AllocationId
             SubnetId: !Ref PublicSubnet2
@@ -171,6 +174,7 @@ Resources:
 
     DefaultPrivateRoute1:
         Type: AWS::EC2::Route
+        Condition: IsWithNatGW
         Properties:
             RouteTableId: !Ref PrivateRouteTable1
             DestinationCidrBlock: 0.0.0.0/0
@@ -192,6 +196,7 @@ Resources:
 
     DefaultPrivateRoute2:
         Type: AWS::EC2::Route
+        Condition: IsWithNatGW
         Properties:
             RouteTableId: !Ref PrivateRouteTable2
             DestinationCidrBlock: 0.0.0.0/0
